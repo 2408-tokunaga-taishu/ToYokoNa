@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.example.ToYokoNA.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 
 @Service
 public class TaskService {
@@ -22,7 +20,7 @@ public class TaskService {
      * タスク全件取得
      */
     public List<TaskForm> findAllTask() {
-        List<Task> results = taskRepository.findALLOrderByLimitDateAsc();
+        List<Task> results = taskRepository.findAll();
         List<TaskForm> tasks = setTaskForm(results);
         return tasks;
     }
