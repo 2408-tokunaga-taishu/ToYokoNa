@@ -6,7 +6,10 @@ import com.example.ToYokoNA.repository.entity.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -20,7 +23,8 @@ public class TaskService {
      * タスク全件取得
      */
     public List<TaskForm> findAllTask() {
-        List<Task> results = taskRepository.findAll();
+        int limit = 1000;
+        List<Task> results = taskRepository.findAllByOrderByLimitDateAsc(limit);
         List<TaskForm> tasks = setTaskForm(results);
         return tasks;
     }
@@ -44,5 +48,25 @@ public class TaskService {
     public void deleteById(int id) {
         //JpaRepositoryのdeleteByIdメソッドを使用し、削除してもらう
         taskRepository.deleteById(id);
+    }
+
+    public void saveTask(TaskForm taskForm) {
+        taskForm.setStatus(1);
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+        taskForm.setLimitDate(sdFormat.parse(taskForm.getLimitDate() + " 23:59:59"));
+        Task task = setEntity(taskForm);
+        taskRepository.save(task);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Task setEntity(TaskForm taskForm) {
+        Task task = new Task();
+        task.setContent(taskForm.getContent());
+        task.setLimitDate(taskForm.getLimitDate());
+        task.setStatus(taskForm.getStatus());
+        return task;
     }
 }
