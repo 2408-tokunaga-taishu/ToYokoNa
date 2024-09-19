@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <title>TOP</title>
+    </head>
+    <body>
+        <div class="header-contents">
+            <h1>Todoリスト</h1>
+        </div>
+        <div class="main-contents">
+            <div class="task-icon" th:each="task : ${tasks}">
+                <div class="text">
+                     <label th:text="${tasks.content}" maxlength="200"/>
+                </div>
+                <div class="status">
+                    <select name="status">
+                        <option>未着手</option>
+                        <option>完了</option>
+                        <option>ステイ中</option>
+                        <option>実行中</option>
+                    </select>
+                    <div class="limitDate">
+                        <label th:text="${tasks.limitDate}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
+
