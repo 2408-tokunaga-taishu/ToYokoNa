@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 public class TaskService {
-
     @Autowired
     TaskRepository taskRepository;
 
@@ -23,7 +22,8 @@ public class TaskService {
      * タスク全件取得
      */
     public List<TaskForm> findAllTask() {
-        List<Task> results = taskRepository.findAll();
+        int limit = 1000;
+        List<Task> results = taskRepository.findAllByOrderByLimitDateAsc(limit);
         List<TaskForm> tasks = setTaskForm(results);
         return tasks;
     }
@@ -68,10 +68,25 @@ public class TaskService {
         return task;
     }
 
+    public void saveTask(TaskForm taskForm) throws ParseException {
+        taskForm.setStatus(1);
+        Task task = setEntity(taskForm);
+        taskRepository.save(task);
+    }
+
+    private Task setEntity(TaskForm taskForm) throws ParseException {
+        Task task = new Task();
+        task.setContent(taskForm.getContent());
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        task.setLimitDate((sdFormat.parse(taskForm.getStrLimitDate() + " 23:59:59")));
+        task.setStatus(taskForm.getStatus());
+        return task;
+    }
+
     /*
      * レコード追加・編集
      */
-    public void saveTask(TaskForm reqTask) throws ParseException {
+    public void updateTask(TaskForm reqTask) throws ParseException {
         Task saveTask = setTaskEntity(reqTask);
         taskRepository.save(saveTask);
     }

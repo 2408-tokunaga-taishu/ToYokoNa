@@ -8,15 +8,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Validated
 public class TaskController {
 
     @Autowired
@@ -27,12 +28,47 @@ public class TaskController {
     @GetMapping
     public ModelAndView top(Model model) {
     ModelAndView mav = new ModelAndView();
-    boolean isShowMessageForm = false;
+    boolean isShowTaskForm = false;
     List<TaskForm> taskForm = taskService.findAllTask();
     mav.addObject("tasks", taskForm);
 
     mav.setViewName("/top");
     return mav;
+    }
+    /*
+     *新規タスク画面
+     */
+    @GetMapping("/new")
+    public ModelAndView newPage(){
+        ModelAndView mav = new ModelAndView();
+        TaskForm taskForm = new TaskForm();
+//        遷移先
+        mav.setViewName("/new");
+//        空のフォーム送信
+        mav.addObject("taskForm", taskForm);
+        return mav;
+    }
+
+    /*
+     * タスク追加処理
+     */
+    @PostMapping("/add")
+    public ModelAndView addTask(@ModelAttribute("taskForm") @Validated TaskForm taskForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws ParseException {
+        ModelAndView mav = new ModelAndView();
+        List<String> errorMessages = new ArrayList<>();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessages.add(error.getDefaultMessage());
+            }
+        }
+        if (errorMessages.size() >= 1 ) {
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+            mav.setViewName("redirect:/new");
+        } else {
+            taskService.saveTask(taskForm);
+            mav.setViewName("redirect:/");
+        }
+        return mav;
     }
     /*
      * 削除機能
@@ -74,7 +110,7 @@ public class TaskController {
             return new ModelAndView("redirect:/edit/" + id);
         }
         // 投稿をテーブルに格納
-        taskService.saveTask(taskForm);
+        taskService.updateTask(taskForm);
         // rootへリダイレクト
         return new ModelAndView("redirect:/");
     }

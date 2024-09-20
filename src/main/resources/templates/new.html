@@ -1,10 +1,36 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <div class="header-contents">
+            <h1>タスク追加</h1>
+        </div>
+        <div class="error-messages">
+            <div th:if="${errorMessages != null}">
+                <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+                    <p th:text="${errorMessage}"/>
+                </div>
+            </div>
+        </div>
+        <form method="post" action="/add" th:object="${taskForm}">
+            <div class="form-area">
+                <div class="content">
+                    タスク内容<br>
+                    <input type="text" th:field="*{content}" size="120"  /><br/>
+                </div>
+                <div class="limit-date">
+                    タスク期限<br>
+                    <textarea th:field="*{strLimitDate}" placeholder="yyyy-mm-dd" /></textarea><br/>
+                </div>
+                <input type="submit" value="追加">
+            </div>
+        </form>
+        <form action="/">
+            <input type="submit" value="戻る" />
+        </form>
+    </body>
 </html>
