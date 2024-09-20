@@ -1,6 +1,7 @@
 package com.example.ToYokoNA.controller.form;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.example.ToYokoNA.Validation.Past;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ public class TaskForm {
     @NotNull
     private int id;
 
-    @NotEmpty(message = "タスクを入力してください")
+    @NotBlank(message = "タスクを入力してください")
     @Size(max = 140, message = "タスクは140文字以内で入力してください")
     private String content;
 
@@ -25,4 +26,8 @@ public class TaskForm {
 
     private Date createdDate;
     private Date updatedDate;
+    @Past
+    @NotBlank(message = "期限を設定してください")
+    private String strLimitDate;
+
 }
