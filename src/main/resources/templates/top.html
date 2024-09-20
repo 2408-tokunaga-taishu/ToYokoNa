@@ -1,70 +1,82 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="UTF-8">
-        <title>TOP</title>
-    </head>
-    <body>
-        <div class="header-contents">
-            <h1>Todoリスト</h1>
+<head>
+    <meta charset="UTF-8">
+    <title>TOP</title>
+</head>
+<body>
+<div class="header-contents">
+    <h1>Todoリスト</h1>
+</div>
+<div class="main-contents">
+    <div class="now-time">
+        本日の日付：<label th:text="${#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}"/>
+    </div>
+    <a href="/new">
+        <input type="button" value="新規タスク">
+    </a>
+    <form method="get" action="./">
+        <div class="search">
+            期限<textarea name="startDate" id="startDate" placeholder="yyyy-mm-dd" /></textarea>~<textarea name="endDate" id="endDate" placeholder="yyyy-mm-dd" /></textarea>
+            ステータス<select name="selectStatus">
+            <option value="1" >未着手</option>
+            <option value="2" >実行中</option>
+            <option value="3" >ステイ中</option>
+            <option value="4" >完了</option>
+        </select>
+            タスク内容<input type="text" name="selectContent" id="content" size="120"  />
+            <input type="submit" value="絞込">
         </div>
-        <div class="main-contents">
-            <div class="now-time">
-                本日の日付：<label th:text="${#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}"/>
-            </div>
-            <a href="/new">
-                <input type="button" value="新規タスク">
-            </a>
-            <form method="get" action="./">
-                <div class="search">
-                    期限<textarea name="startDate" id="startDate" placeholder="yyyy-mm-dd" /></textarea>~<textarea name="endDate" id="endDate" placeholder="yyyy-mm-dd" /></textarea>
-                    ステータス<select name="selectStatus">
-                                <option value="1" >未着手</option>
-                                <option value="2" >実行中</option>
-                                <option value="3" >ステイ中</option>
-                                <option value="4" >完了</option>
+    </form>
+    <table border="1">
+        <tr>
+            <th>タスク内容</th>
+            <th>ステータス</th>
+            <th>期日</th>
+        </tr>
+        <div class="task-icon" th:each="task : ${tasks}">
+            <tr>
+                <td>
+                    <div class="text">
+                        <span th:text="${task.content}" maxlength="200"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="status">
+                        <form th:method="put" th:action="@{/{id}(id=${task.id})}" th:object="${status}">
+                            <select name="status">
+                                <option value="1" th:selected="${task.status == 1}">未着手</option>
+                                <option value="2" th:selected="${task.status == 2}">実行中</option>
+                                <option value="3" th:selected="${task.status == 3}">ステイ中</option>
+                                <option value="4" th:selected="${task.status == 4}">完了</option>
                             </select>
-                    タスク内容<input type="text" name="selectContent" id="content" size="120"  />
-                    <input type="submit" value="絞込">
-                </div>
-            </form>
-            <table border="1">
-                <tr>
-                    <th>タスク内容</th>
-                    <th>ステータス</th>
-                    <th>期日</th>
-                </tr>
-                <div class="task-icon" th:each="task : ${taskForm}">
-                    <tr>
-                        <td>
-                            <div class="text">
-                                <span th:text="${task.content}" maxlength="200"/>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="status">
-                                <select name="status">
-                                    <option value="1" th:selected="${task.status == 1}">未着手</option>
-                                    <option value="2" th:selected="${task.status == 2}">実行中</option>
-                                    <option value="3" th:selected="${task.status == 3}">ステイ中</option>
-                                    <option value="4" th:selected="${task.status == 4}">完了</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="limitDate">
-                                <div th:if="${#dates.format(task.limitDate, 'yyyy/MM/dd')>#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                                    <span  style="color:yellow" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
-                                </div>
-                                <div th:unless="${#dates.format(task.limitDate, 'yyyy/MM/dd')>#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                                    <span  style="color:red" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </div>
-            </table>
+                            <input type="hidden" th:value="${task.id}">
+                            <input type="submit" value="変更">
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <div class="limitDate">
+                        <div th:if="${#dates.format(task.limitDate, 'yyyy/MM/dd')>#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
+                            <span  style="color:yellow" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
+                        </div>
+                        <div th:unless="${#dates.format(task.limitDate, 'yyyy/MM/dd')>#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
+                            <span  style="color:red" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
+                        </div>
+                        <a th:href="@{/edit/{id}(id=${task.id})}">
+                            <button class="edit-button" type="button">編集</button>
+                        </a>
+                        <form th:action="@{/delete/{id}(id=${task.id})}" th:method="delete">
+                            <button class="delete-button" type="submit">削除</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
         </div>
-    </body>
+    </table>
+</div>
+<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../static/top.js"></script>
+</body>
 </html>
 

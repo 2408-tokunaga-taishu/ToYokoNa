@@ -3,6 +3,7 @@ package com.example.ToYokoNA.repository.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
@@ -30,6 +31,4 @@ public class Task {
 
     @Column(name="updated_date", insertable=false)
     private Date updatedDate;
-
-
 }
