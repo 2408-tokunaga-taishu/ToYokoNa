@@ -9,16 +9,25 @@
         <div class="header-contents">
             <h1>タスク追加</h1>
         </div>
+        <div class="error-messages">
+            <div th:if="${errorMessages != null}">
+                <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+                    <p th:text="${errorMessage}"/>
+                </div>
+            </div>
+        </div>
         <form method="post" action="/add" th:object="${taskForm}">
             <div class="form-area">
-                タスク内容<br>
-                <input type="text" th:field="*{content}" size="20" maxlength="140" /><br/>
+                <div class="content">
+                    タスク内容<br>
+                    <input type="text" th:field="*{content}" size="120"  /><br/>
+                </div>
+                <div class="limit-date">
+                    タスク期限<br>
+                    <textarea th:field="*{strLimitDate}" placeholder="yyyy-mm-dd" /></textarea><br/>
+                </div>
+                <input type="submit" value="追加">
             </div>
-            <div class="limit-date">
-                タスク期限<br>
-                <input type="date" name="limitDate" id="limitDate" th:value="*{limitDate}" size="20"  /><br/>
-            </div>
-            <input type="submit" value="追加">
         </form>
         <form action="/">
             <input type="submit" value="戻る" />

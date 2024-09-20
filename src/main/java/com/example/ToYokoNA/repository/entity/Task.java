@@ -30,4 +30,6 @@ public class Task {
 
     @Column(name="updated_date", insertable=false)
     private Date updatedDate;
+
+
 }

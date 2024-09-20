@@ -50,22 +50,17 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    public void saveTask(TaskForm taskForm) {
+    public void saveTask(TaskForm taskForm) throws ParseException {
         taskForm.setStatus(1);
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-        taskForm.setLimitDate(sdFormat.parse(taskForm.getLimitDate() + " 23:59:59"));
         Task task = setEntity(taskForm);
         taskRepository.save(task);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    private Task setEntity(TaskForm taskForm) {
+    private Task setEntity(TaskForm taskForm) throws ParseException {
         Task task = new Task();
         task.setContent(taskForm.getContent());
-        task.setLimitDate(taskForm.getLimitDate());
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        task.setLimitDate((sdFormat.parse(taskForm.getStrLimitDate() + " 23:59:59")));
         task.setStatus(taskForm.getStatus());
         return task;
     }
