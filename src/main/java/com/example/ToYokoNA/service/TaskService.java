@@ -3,6 +3,7 @@ package com.example.ToYokoNA.service;
 import com.example.ToYokoNA.controller.form.TaskForm;
 import com.example.ToYokoNA.repository.TaskRepository;
 import com.example.ToYokoNA.repository.entity.Task;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,19 @@ public class TaskService {
     public List<TaskForm> findAllTask(String startDate, String endDate, String selectStatus, String selectContent) {
         int limit = 1000;
         List<Task> results = new ArrayList<>();
-        if (!isBlank(startDate)) {
+        if (!StringUtils.isEmpty(startDate)) {
             startDate = startDate + " 00:00:00";
 
         } else {
             startDate = "2020-01-01 00:00:00";
         }
-        if (!isBlank(endDate)) {
+        if (!StringUtils.isEmpty(endDate)) {
             endDate = endDate + " 23:59:59";
         } else {
             endDate = "2100-12-31 23:59:59";
         }
 
-            results = taskRepository.findAllByOrderByLimitDateAscLimit(limit, startDate, endDate);
+        results = taskRepository.findAllByOrderByLimitDateAscLimit(limit);
 
         List<TaskForm> tasks = setTaskForm(results);
         return tasks;
@@ -94,7 +95,7 @@ public class TaskService {
         Task task = new Task();
         task.setContent(taskForm.getContent());
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        task.setLimitDate((sdFormat.parse(taskForm.getStrLimitDate() + " 23:59:59")));
+        task.setLimitDate((sdFormat.parse(taskForm.getLimitDate() + " 23:59:59")));
         task.setStatus(taskForm.getStatus());
         return task;
     }

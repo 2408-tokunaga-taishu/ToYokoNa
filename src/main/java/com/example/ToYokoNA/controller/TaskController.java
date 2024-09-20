@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@Validated
 public class TaskController {
 
     @Autowired

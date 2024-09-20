@@ -34,7 +34,7 @@
             <th>ステータス</th>
             <th>期日</th>
         </tr>
-        <div class="task-icon" th:each="task : ${tasks}">
+        <div class="task-icon" th:each="task : ${taskForm}">
             <tr>
                 <td>
                     <div class="text">
@@ -76,7 +76,7 @@
     </table>
 </div>
 <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="../static/top.js"></script>
+<script th:src="@{/top.js}"></script>
 </body>
 </html>
 

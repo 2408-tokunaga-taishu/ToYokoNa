@@ -14,10 +14,10 @@ public class PastValidator implements ConstraintValidator<Past, String> {
     public boolean isValid(String limit, ConstraintValidatorContext context) {
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            if (sdFormat.parse(limit).before(new Date())){
-                return false;
-            } else {
+            if (!sdFormat.parse(limit).before(new Date()) || limit.isEmpty()){
                 return true;
+            } else {
+                return false;
             }
         } catch (ParseException e) {
             throw new RuntimeException(e);

@@ -21,13 +21,11 @@ public class TaskForm {
 
     private int status;
 
-    @NotNull(message = "期限を設定してください")
+    @NotBlank(message = "期限を設定してください")
     private String limitDate;
 
     private Date createdDate;
     private Date updatedDate;
-    @Past
-    @NotBlank(message = "期限を設定してください")
-    private String strLimitDate;
+
 
 }
