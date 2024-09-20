@@ -33,11 +33,10 @@ public class TaskController {
      * 初期画面表示
      */
     @GetMapping
-    public ModelAndView top(Model model) {
+    public ModelAndView top(Model model, @RequestParam(name = "startDate", required = false) String startDate, @RequestParam(name = "endDate", required = false) String endDate, @RequestParam(name = "selectStatus", required = false) String selectStatus, @RequestParam(name = "selectContent", required = false) String selectContent) {
     ModelAndView mav = new ModelAndView();
-    boolean isShowTaskForm = false;
-    List<TaskForm> taskForm = taskService.findAllTask();
-    mav.addObject("tasks", taskForm);
+    List<TaskForm> results = taskService.findAllTask(startDate, endDate, selectStatus, selectContent);
+    mav.addObject("taskForm", results);
     mav.setViewName("/top");
     return mav;
     }

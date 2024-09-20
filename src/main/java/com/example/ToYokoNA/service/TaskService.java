@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 
 @Service
 public class TaskService {
@@ -22,9 +24,23 @@ public class TaskService {
     /*
      * タスク全件取得
      */
-    public List<TaskForm> findAllTask() {
+    public List<TaskForm> findAllTask(String startDate, String endDate, String selectStatus, String selectContent) {
         int limit = 1000;
-        List<Task> results = taskRepository.findAllByOrderByLimitDateAsc(limit);
+        List<Task> results = new ArrayList<>();
+        if (!isBlank(startDate)) {
+            startDate = startDate + " 00:00:00";
+
+        } else {
+            startDate = "2020-01-01 00:00:00";
+        }
+        if (!isBlank(endDate)) {
+            endDate = endDate + " 23:59:59";
+        } else {
+            endDate = "2100-12-31 23:59:59";
+        }
+
+            results = taskRepository.findAllByOrderByLimitDateAscLimit(limit, startDate, endDate);
+
         List<TaskForm> tasks = setTaskForm(results);
         return tasks;
     }

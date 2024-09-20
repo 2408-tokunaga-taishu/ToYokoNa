@@ -15,16 +15,26 @@
             <a href="/new">
                 <input type="button" value="新規タスク">
             </a>
-            <div class="search">
-                <textarea name="startDate" id="startDate" placeholder="yyyy-mm-dd" /></textarea>~<textarea name="endDate" id="endDate" placeholder="yyyy-mm-dd" /></textarea>
-            </div>
+            <form method="get" action="./">
+                <div class="search">
+                    期限<textarea name="startDate" id="startDate" placeholder="yyyy-mm-dd" /></textarea>~<textarea name="endDate" id="endDate" placeholder="yyyy-mm-dd" /></textarea>
+                    ステータス<select name="selectStatus">
+                                <option value="1" >未着手</option>
+                                <option value="2" >実行中</option>
+                                <option value="3" >ステイ中</option>
+                                <option value="4" >完了</option>
+                            </select>
+                    タスク内容<input type="text" name="selectContent" id="content" size="120"  />
+                    <input type="submit" value="絞込">
+                </div>
+            </form>
             <table border="1">
                 <tr>
                     <th>タスク内容</th>
                     <th>ステータス</th>
                     <th>期日</th>
                 </tr>
-                <div class="task-icon" th:each="task : ${tasks}">
+                <div class="task-icon" th:each="task : ${taskForm}">
                     <tr>
                         <td>
                             <div class="text">

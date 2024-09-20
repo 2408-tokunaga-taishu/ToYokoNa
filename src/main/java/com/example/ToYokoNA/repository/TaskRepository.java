@@ -10,6 +10,12 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
-    @Query("SELECT t FROM Task t ORDER BY limitDate ASC LIMIT :limit")
-    public List<Task> findAllByOrderByLimitDateAsc(@Param("limit") int limit);
+//    絞込情報なし
+    @Query("SELECT t FROM Task t Where limitDate BETWEEN :startDate AND :endDate ORDER BY limitDate ASC LIMIT :limit")
+    public List<Task> findAllByOrderByLimitDateAscLimit(@Param("limit") int limit, @Param("startDate") String startDate, @Param("endDate")String endDate);
+//    絞込情報すべてあり
+    @Query("SELECT t FROM Task t Where limitDate BETWEEN :startDate AND :endDate AND content = :SelectContent AND status = :SelectStatus ORDER BY limitDate ASC LIMIT :limit")
+    public List<Task> findAllByWHEREALLOrderByLimitDateAsc(@Param("limit") int limit, @Param("startDate") String startDate, @Param("endDate")String endDate, @Param("SelectContent") String selectContent, @Param("SelectStatus") String selectStatus);
+
+
 }

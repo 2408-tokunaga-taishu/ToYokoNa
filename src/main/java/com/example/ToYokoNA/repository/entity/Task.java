@@ -16,10 +16,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name="content")
     private String content;
 
-    @Column
+    @Column(name="status")
     private int status;
 
     @Column(name="limit_date")
