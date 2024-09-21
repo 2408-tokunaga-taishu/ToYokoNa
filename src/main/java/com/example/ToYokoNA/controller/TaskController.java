@@ -1,6 +1,7 @@
 package com.example.ToYokoNA.controller;
 
 import com.example.ToYokoNA.Validation.ValidId;
+import com.example.ToYokoNA.controller.form.GroupOrder;
 import com.example.ToYokoNA.controller.form.TaskForm;
 import com.example.ToYokoNA.service.TaskService;
 import jakarta.validation.Valid;
@@ -115,7 +116,7 @@ public class TaskController {
      */
     @PutMapping("/edit/{id}")
     public ModelAndView SaveTask(@PathVariable("id") int id,
-                                    @Validated
+                                    @Validated(GroupOrder.class)
                                     @ModelAttribute("tasks") TaskForm taskForm,
                                     BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
         taskForm.setId(id);

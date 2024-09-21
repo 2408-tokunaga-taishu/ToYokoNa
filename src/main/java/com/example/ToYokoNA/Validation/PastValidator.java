@@ -12,9 +12,9 @@ public class PastValidator implements ConstraintValidator<Past, String> {
 
     @Override
     public boolean isValid(String limit, ConstraintValidatorContext context) {
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd");
         try {
-            if (!sdFormat.parse(limit).before(new Date()) || limit.isEmpty()){
+            if (!sdFormat.parse(limit).before(new Date()) && (!limit.isEmpty())){
                 return true;
             } else {
                 return false;
