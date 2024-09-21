@@ -83,17 +83,19 @@ public class TaskController {
         return new ModelAndView("redirect:/");
     }
     /*
-     * 編集画面表示
+     * 編集画面表示(idがURLにのってなかった場合のバリデーションの役割)
      */
     @GetMapping({"/edit", "/edit/"})
     public ModelAndView noIdEditTask (RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessages", "不正なパラメータです");
         return new ModelAndView("redirect:/");
     }
-
+    /*
+     * 編集画面表示
+     */
     @GetMapping("/edit/{id}")
     public ModelAndView editTask(@PathVariable String id, RedirectAttributes redirectAttributes) {
-        if (StringUtils.isBlank(id) || (!id.matches("^[0-9]*$"))) {
+        if (!id.matches("^[0-9]*$")) {
             redirectAttributes.addFlashAttribute("errorMessages", "不正なパラメータです");
             return new ModelAndView("redirect:/");
         }
@@ -107,6 +109,7 @@ public class TaskController {
             mav.addObject("tasks", taskData);
             return mav;
         } catch (Exception e) {
+            // idが数字だったけどタスクが存在しなかった場合のエラーメッセージ
             redirectAttributes.addFlashAttribute("errorMessages", "不正なパラメータです");
             return new ModelAndView("redirect:/");
         }
