@@ -9,6 +9,13 @@
     <h1>Todoリスト</h1>
 </div>
 <div class="main-contents">
+    <div class="error-messages">
+        <div th:if="${errorMessages != null}">
+            <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+                <p th:text="${errorMessage}"/>
+            </div>
+        </div>
+    </div>
     <div class="now-time">
         本日の日付：<label th:text="${#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}"/>
     </div>
