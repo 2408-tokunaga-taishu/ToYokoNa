@@ -20,7 +20,7 @@ public class TaskForm {
     private String content;
 
     private int status;
-
+    @Past
     @NotBlank(message = "期限を設定してください")
     private String limitDate;
 
