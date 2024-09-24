@@ -2,7 +2,11 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <style type="text/css">
+        .errorMessages {
+            color: red;
+        }
+    </style>
     <title>タスク編集</title>
 </head>
 <body>
@@ -12,18 +16,21 @@
 <div class="main-contents">
     <form th:method="put" th:action="@{/edit/{id}(id=${tasks.id})}" th:object="${tasks}">
         <div th:if="${errorMessages}">
-            <p th:each="err : ${errorMessages}" th:text="${err.defaultMessage}"></p>
+            <li class="errorMessages" th:each="err : ${errorMessages}" th:text="${err.defaultMessage}"></li>
+            <br />
         </div>
         <div class="form-area">
             <label>タスク内容</label><br />
-            <textarea class="task-box" th:field="*{content}" size="20" maxlength="140" /><br/>
+            <textarea class="task-box" th:field="*{content}" maxlength="140" rows="5" cols="30"/><br/>
+            <br />
             <label>タスク期限</label><br />
-            <textarea class="limit-date" th:field="*{limitDate}" /><br />
+            <textarea class="limit-date" th:field="*{limitDate}" rows="1" cols="15"/><br />
             <input type="hidden" th:field="*{status}">
             <input type="submit" value="編集" />
         </div>
     </form>
 </div>
+<br />
 <div class="footer-contents">
     <a href="/">
         戻る
