@@ -2,6 +2,21 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link th:href="@{static/top.css}" rel="stylesheet">
+    <style type="text/css">
+        .yellow {
+            background: yellow;
+        }
+        .red {
+            background: red;
+        }
+        .errorMessages {
+            color: red;
+        }
+        .task-table {
+            border-spacing: 30px;
+        }
+    </style>
     <title>TOP</title>
 </head>
 <body>
@@ -12,19 +27,23 @@
     <div class="error-messages">
         <div th:if="${errorMessages != null}">
             <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
-                <p th:text="${errorMessage}"/>
+                <li th:text="${errorMessage}"/>
             </div>
+            <br />
         </div>
     </div>
     <div class="now-time">
         本日の日付：<label th:text="${#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}"/>
     </div>
+    <br />
     <a href="/new">
         <input type="button" value="新規タスク">
     </a>
+    <br />
+    <br />
     <form method="get" action="./">
         <div class="search">
-            期限<textarea name="startDate" id="startDate" placeholder="yyyy/mm/dd" /></textarea>~<textarea name="endDate" id="endDate" placeholder="yyyy/mm/dd" /></textarea>
+            期限 <textarea name="startDate" id="startDate" placeholder="yyyy/mm/dd" rows="1" cols="10"/></textarea>~<textarea name="endDate" id="endDate" placeholder="yyyy/mm/dd" rows="1" cols="10"/></textarea>
             ステータス<select name="selectStatus">
             <option value=""></option>
             <option value="1" >未着手</option>
@@ -32,15 +51,15 @@
             <option value="3" >ステイ中</option>
             <option value="4" >完了</option>
         </select>
-            タスク内容<input type="text" name="selectContent" id="content" size="120"  />
+            タスク内容<input type="text" name="selectContent" id="content" size="10"  />
             <input type="submit" value="絞込">
         </div>
     </form>
-    <table border="1">
+    <table class="task-table">
         <tr>
             <th>タスク内容</th>
             <th>ステータス</th>
-            <th>期日</th>
+            <th>タスク期限</th>
         </tr>
         <div class="task-icon" th:each="task : ${taskForm}">
             <tr>
@@ -76,17 +95,21 @@
                 <td>
                     <div class="limitDate">
                         <div th:if="${#dates.format(task.limitDate, 'yyyy/MM/dd')>#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                            <span  style="color:yellow" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
+                            <span class="yellow" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
                         </div>
                         <div th:unless="${#dates.format(task.limitDate, 'yyyy/MM/dd')>#calendars.format(#calendars.createNow(), 'yyyy/MM/dd')}">
-                            <span  style="color:red" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
+                            <span class="red" th:text="${#dates.format(task.limitDate, 'yyyy/MM/dd')}"/>
                         </div>
-                        <a th:href="@{/edit/{id}(id=${task.id})}">
-                            <button class="edit-button" type="button">編集</button>
-                        </a>
+                        <td>
+                            <a th:href="@{/edit/{id}(id=${task.id})}">
+                                <button class="edit-button" type="button">編集</button>
+                            </a>
+                        </td>
+                        <td>
                         <form th:action="@{/delete/{id}(id=${task.id})}" th:method="delete">
                             <button class="delete-button" type="submit" onClick="return deleteTask()">削除</button>
                         </form>
+                        </td>
                         <script>
                             function deleteTask() {
                                 const deleteTask = confirm("削除してよろしいですか？");
@@ -104,7 +127,7 @@
     </table>
 </div>
 <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-<script th:src="@{/top.js}"></script>
+<script src="../static/main.js"></script>
 </body>
 </html>
 
