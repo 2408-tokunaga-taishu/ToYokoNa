@@ -24,22 +24,31 @@ public class TaskService {
     /*
      * タスク全件取得
      */
-    public List<TaskForm> findAllTask(String startDate, String endDate, String selectStatus, String selectContent) {
+    public List<TaskForm> findAllTask(String startDate, String endDate, String selectStatus, String selectContent) throws ParseException {
+//        取得件数の定数
         int limit = 1000;
         List<Task> results = new ArrayList<>();
+        SimpleDateFormat longDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (!StringUtils.isEmpty(startDate)) {
-            startDate = startDate + " 00:00:00";
+            startDate = startDate.replace("/","-") + " 00:00:00";
 
         } else {
             startDate = "2020-01-01 00:00:00";
         }
         if (!StringUtils.isEmpty(endDate)) {
-            endDate = endDate + " 23:59:59";
+            endDate = endDate.replace("/","-") + " 23:59:59";
         } else {
             endDate = "2100-12-31 23:59:59";
         }
-
-        results = taskRepository.findAllByOrderByLimitDateAscLimit(limit);
+        Date start = longDateFormat.parse(startDate);
+        Date end = longDateFormat.parse(endDate);
+        if (StringUtils.isBlank(selectStatus) && StringUtils.isBlank(selectContent) ) {
+            results = taskRepository.findAllByOrderByLimitDateAscLimit(limit, start, end);
+        } else if (StringUtils.isBlank(selectStatus)) {
+            results = taskRepository.findAllByWHEREContentOrderByLimitDateAsc(limit, start, end, selectContent);
+        } else if (StringUtils.isBlank(selectContent)) {
+            results = taskRepository.findAllByWHEREStatusOrderByLimitDateAsc(limit, start, end, selectStatus);
+        }
 
         List<TaskForm> tasks = setTaskForm(results);
         return tasks;
@@ -95,7 +104,8 @@ public class TaskService {
         Task task = new Task();
         task.setContent(taskForm.getContent());
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        task.setLimitDate((sdFormat.parse(taskForm.getLimitDate() + " 23:59:59")));
+        String sqlDate =  taskForm.getLimitDate().replace("/", "-");
+        task.setLimitDate((sdFormat.parse(sqlDate + " 23:59:59")));
         task.setStatus(taskForm.getStatus());
         return task;
     }
