@@ -119,7 +119,7 @@ public class TaskController {
      */
     @PutMapping("/edit/{id}")
     public ModelAndView SaveTask(@PathVariable("id") int id,
-                                    @Validated(GroupOrder.class)
+                                    @Validated
                                     @ModelAttribute("tasks") TaskForm taskForm,
                                     BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
         taskForm.setId(id);
