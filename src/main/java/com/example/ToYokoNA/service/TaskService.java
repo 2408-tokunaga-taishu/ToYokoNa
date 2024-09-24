@@ -48,6 +48,8 @@ public class TaskService {
             results = taskRepository.findAllByWHEREContentOrderByLimitDateAsc(limit, start, end, selectContent);
         } else if (StringUtils.isBlank(selectContent)) {
             results = taskRepository.findAllByWHEREStatusOrderByLimitDateAsc(limit, start, end, selectStatus);
+        } else {
+            results = taskRepository.findAllByWHEREALLOrderByLimitDateAsc(limit, start, end, selectContent, selectStatus);
         }
 
         List<TaskForm> tasks = setTaskForm(results);
