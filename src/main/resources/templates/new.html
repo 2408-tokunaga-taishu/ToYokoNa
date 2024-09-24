@@ -2,6 +2,11 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <html lang="en">
     <head>
+        <style type="text/css">
+            .errorMessages {
+                color: red;
+            }
+        </style>
         <meta charset="UTF-8">
         <title>Title</title>
     </head>
@@ -12,25 +17,31 @@
         <div class="error-messages">
             <div th:if="${errorMessages != null}">
                 <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
-                    <p th:text="${errorMessage}"/>
+                    <li th:text="${errorMessage}"/>
                 </div>
+                <br />
             </div>
         </div>
         <form method="post" action="/add" th:object="${taskForm}">
             <div class="form-area">
                 <div class="content">
                     タスク内容<br>
-                    <input type="text" th:field="*{content}" size="120"  /><br/>
+                    <textarea type="text" th:field="*{content}" rows="5" cols="30"/><br/>
                 </div>
+                <br />
                 <div class="limit-date">
                     タスク期限<br>
-                    <textarea th:field="*{limitDate}" placeholder="yyyy/mm/dd" /></textarea><br/>
+                    <textarea th:field="*{limitDate}" placeholder="yyyy/mm/dd" rows="1" cols="15"/></textarea><br/>
                 </div>
+                <br />
                 <input type="submit" value="追加">
             </div>
         </form>
-        <form action="/">
-            <input type="submit" value="戻る" />
-        </form>
+        <br />
+        <div class="footer-contents">
+            <a href="/">
+                戻る
+            </a>
+        </div>
     </body>
 </html>
