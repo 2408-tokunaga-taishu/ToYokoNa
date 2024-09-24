@@ -111,7 +111,7 @@ public class TaskService {
     }
 
     /*
-     * レコード追加・編集
+     * レコード編集
      */
     public void updateTask(TaskForm reqTask) throws ParseException {
         Task saveTask = setTaskEntity(reqTask);

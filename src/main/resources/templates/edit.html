@@ -11,8 +11,8 @@
 </div>
 <div class="main-contents">
     <form th:method="put" th:action="@{/edit/{id}(id=${tasks.id})}" th:object="${tasks}">
-        <div th:if="${errors}">
-            <p th:each="err : ${errors}" th:text="${err.defaultMessage}"></p>
+        <div th:if="${errorMessages}">
+            <p th:each="err : ${errorMessages}" th:text="${err.defaultMessage}"></p>
         </div>
         <div class="form-area">
             <label>タスク内容</label><br />

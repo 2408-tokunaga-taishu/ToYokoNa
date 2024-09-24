@@ -1,7 +1,11 @@
 package com.example.ToYokoNA.controller;
 
+import com.example.ToYokoNA.Validation.ValidId;
+import com.example.ToYokoNA.controller.form.GroupOrder;
 import com.example.ToYokoNA.controller.form.TaskForm;
 import com.example.ToYokoNA.service.TaskService;
+import jakarta.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,31 +83,49 @@ public class TaskController {
         return new ModelAndView("redirect:/");
     }
     /*
+     * 編集画面表示(idがURLにのってなかった場合のバリデーションの役割)
+     */
+    @GetMapping({"/edit", "/edit/"})
+    public ModelAndView noIdEditTask (RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessages", "不正なパラメータです");
+        return new ModelAndView("redirect:/");
+    }
+    /*
      * 編集画面表示
      */
     @GetMapping("/edit/{id}")
-    public ModelAndView editTask(@PathVariable int id) {
+    public ModelAndView editTask(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        if (!id.matches("^[0-9]*$")) {
+            redirectAttributes.addFlashAttribute("errorMessages", "不正なパラメータです");
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView mav = new ModelAndView();
         // 対象の投稿を取得
-        TaskForm taskData = taskService.findByIdTask(id);
-        // 画面遷移先を指定
-        mav.setViewName("/edit");
-        // 投稿データオブジェクトを保管
-        mav.addObject("tasks", taskData);
-        return mav;
+        try {
+            TaskForm taskData = taskService.findByIdTask(Integer.parseInt(id));
+            // 画面遷移先を指定
+            mav.setViewName("/edit");
+            // 投稿データオブジェクトを保管
+            mav.addObject("tasks", taskData);
+            return mav;
+        } catch (Exception e) {
+            // idが数字だったけどタスクが存在しなかった場合のエラーメッセージ
+            redirectAttributes.addFlashAttribute("errorMessages", "不正なパラメータです");
+            return new ModelAndView("redirect:/");
+        }
     }
     /*
      * 編集機能
      */
     @PutMapping("/edit/{id}")
     public ModelAndView SaveTask(@PathVariable("id") int id,
-                                    @Validated
+                                    @Validated(GroupOrder.class)
                                     @ModelAttribute("tasks") TaskForm taskForm,
                                     BindingResult result, RedirectAttributes redirectAttributes) throws ParseException {
         taskForm.setId(id);
         if (result.hasErrors()) {
             // エラーメッセージをRedirectAttributesに追加
-            redirectAttributes.addFlashAttribute("errors", result.getAllErrors());
+            redirectAttributes.addFlashAttribute("errorMessages", result.getAllErrors());
             return new ModelAndView("redirect:/edit/" + id);
         }
         // 投稿をテーブルに格納

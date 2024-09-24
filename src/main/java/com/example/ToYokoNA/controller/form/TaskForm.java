@@ -1,11 +1,11 @@
 package com.example.ToYokoNA.controller.form;
 
+import com.example.ToYokoNA.Validation.CheckBlank;
 import com.example.ToYokoNA.Validation.Past;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.util.Date;
 
@@ -13,19 +13,19 @@ import java.util.Date;
 @Setter
 public class TaskForm {
     @NotNull
+    @NumberFormat(pattern = "^[0-9]*$") //数字のみ許容
     private int id;
 
-    @NotBlank(message = "タスクを入力してください")
-    @Size(max = 140, message = "タスクは140文字以内で入力してください")
+    @CheckBlank(groups = ValidGroup1.class)
+    @Size(max = 140, message = "タスクは140文字以内で入力してください", groups = ValidGroup1.class)
     private String content;
 
     private int status;
-    @Past
-    @NotBlank(message = "期限を設定してください")
+
+    @CheckBlank(message = "期限を設定してください", groups = ValidGroup1.class)
+    @Past(groups = ValidGroup2.class)
     private String limitDate;
 
     private Date createdDate;
     private Date updatedDate;
-
-
 }
