@@ -23,7 +23,6 @@ public class TaskForm {
     private int status;
 
     @CheckBlank(message = "期限を設定してください", groups = ValidGroup1.class)
-    @Pattern(regexp = "^\\d{4}/\\d{1,2}/\\d{1,2}$", groups = ValidGroup1.class, message = "無効な日付です")
     @Past(groups = ValidGroup2.class)
     private String limitDate;
 

@@ -58,7 +58,17 @@
                                 <option value="4" th:selected="${task.status == 4}">完了</option>
                             </select>
                             <input type="hidden" th:value="${task.id}">
-                            <input type="submit" value="変更">
+                            <input type="submit" value="変更" onClick="return statusSave()">
+                            <script>
+                                function statusSave() {
+                                    const statusSave = confirm("変更してよろしいですか？");
+                                    if(statusSave == true) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            </script>
                         </form>
                     </div>
                 </td>
@@ -74,8 +84,18 @@
                             <button class="edit-button" type="button">編集</button>
                         </a>
                         <form th:action="@{/delete/{id}(id=${task.id})}" th:method="delete">
-                            <button class="delete-button" type="submit">削除</button>
+                            <button class="delete-button" type="submit" onClick="return deleteTask()">削除</button>
                         </form>
+                        <script>
+                            function deleteTask() {
+                                const deleteTask = confirm("削除してよろしいですか？");
+                                if(deleteTask == true) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            }
+                        </script>
                     </div>
                 </td>
             </tr>
