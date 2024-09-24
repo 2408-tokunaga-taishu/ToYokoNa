@@ -16,14 +16,14 @@ public class TaskForm {
     @NumberFormat(pattern = "^[0-9]*$") //数字のみ許容
     private int id;
 
-    @CheckBlank(groups = ValidGroup1.class)
-    @Size(max = 140, message = "タスクは140文字以内で入力してください", groups = ValidGroup1.class)
+    @CheckBlank
+    @Size(max = 140, message = "タスクは140文字以内で入力してください")
     private String content;
 
     private int status;
 
-    @CheckBlank(message = "期限を設定してください", groups = ValidGroup1.class)
-    @Past(groups = ValidGroup2.class)
+    @CheckBlank(message = "期限を設定してください")
+    @Past
     private String limitDate;
 
     private Date createdDate;

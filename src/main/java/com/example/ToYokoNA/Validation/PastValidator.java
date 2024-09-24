@@ -15,11 +15,14 @@ public class PastValidator implements ConstraintValidator<Past, String> {
 
     @Override
     public boolean isValid(String limit, ConstraintValidatorContext context) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        if (limit.compareTo(dateFormat.format(new Date())) >= 0) {
-            return true;
-        } else {
-            return false;
+        if (!StringUtils.isBlank(limit)) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            if (limit.compareTo(dateFormat.format(new Date())) >= 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
+        return true;
     }
 }
