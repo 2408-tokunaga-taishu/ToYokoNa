@@ -54,7 +54,7 @@ public class TaskController {
      * タスク追加処理
      */
     @PostMapping("/add")
-    public ModelAndView addTask(@ModelAttribute("taskForm") @Validated TaskForm taskForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws ParseException {
+    public ModelAndView addTask(@ModelAttribute("taskForm") @Validated(GroupOrder.class) TaskForm taskForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws ParseException {
         ModelAndView mav = new ModelAndView();
         List<String> errorMessages = new ArrayList<>();
         if (bindingResult.hasErrors()) {
